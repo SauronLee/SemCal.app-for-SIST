@@ -1,0 +1,1 @@
+#"""Created on Sat Jun 27 23:50:37 2020@author: sauron"""from flask_restful import Apifrom App.apis.semcal_user.semcal_user_api import SemCalUsersResourceclient_api = Api(prefix='/user_client')client_api.add_resource(SemCalUsersResource, '/semcalusers/')
