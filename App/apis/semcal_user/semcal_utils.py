@@ -1,7 +1,11 @@
 from App.models.semcal_user import SemCalUser
 
 
-def get_user(user_ident):
+def get_user(user_ident: object) -> object:
+
+    if not user_ident:
+        return None
+
     print("user_ident =", user_ident)
     user = SemCalUser.query.get(user_ident)
     print("get_user =", user)
