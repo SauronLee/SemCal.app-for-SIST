@@ -4,6 +4,9 @@ from App.ext import db
 from App.models import BaseModel
 from App.models.semcal_user.model_constant import PERMISSION_NONE
 
+BLACK_USER = 1
+COMMON_USER = 2
+VIP_USER = 4
 
 class SemCalUser(BaseModel):
     username = db.Column(db.String(32), unique=True)
@@ -20,3 +23,10 @@ class SemCalUser(BaseModel):
 
     def check_password(self, password_value):
         return check_password_hash(self._password, password_value)
+
+    def check_permission(self, permission):
+
+        if BLACK_USER & permission == BLACK_USER:
+            return False
+        else:
+            return permission & self.permissiomn == permission
