@@ -12,7 +12,7 @@ class SemCalUser(BaseModel):
     username = db.Column(db.String(32), unique=True)
     _password = db.Column(db.String(256))
     is_delete = db.Column(db.Boolean, default=False)
-    permissiomn = db.Column(db.Integer, default=PERMISSION_NONE)
+    permission = db.Column(db.Integer, default=PERMISSION_NONE)
 
     @property
     def password(self):
@@ -26,7 +26,7 @@ class SemCalUser(BaseModel):
 
     def check_permission(self, permission):
 
-        if BLACK_USER & permission == BLACK_USER:
+        if BLACK_USER & self.permission == BLACK_USER:
             return False
         else:
-            return permission & self.permissiomn == permission
+            return permission & self.permission == permission

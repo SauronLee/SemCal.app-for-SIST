@@ -22,7 +22,7 @@ parse_base.add_argument("username", type=str, required=True, help="please nenter
 #parse_register.add_argument("username", type=str, required=True, help="please nenter username")
 
 #parse_login = parse_base.copy()
-#parse_login.add_argument("username", type=str, required=True, help="please nenter username")
+#parse_login.add_argument("username", type=str, required=True, help="please nenter username")e
 
 semcal_user_fields = {
     "username": fields.String,

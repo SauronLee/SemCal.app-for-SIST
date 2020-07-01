@@ -31,7 +31,7 @@ class DevelopConfig(Config):
         'PASSWORD':'R4HyrgdJfuzjKnWW',
         'HOST':'localhost',
         'PORT':3306,
-        'NAME':'flaskSemCal',
+        'NAME':'SemCal_User',
 
     }
     MAIL_SERVER = "smtp.gmail.com"
