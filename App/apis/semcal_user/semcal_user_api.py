@@ -4,7 +4,6 @@ Created on Sat Jun 27 23:50:37 2020
 
 @author: sauron
 """
-import uuid
 
 from flask_restful import Resource, reqparse, abort, fields, marshal
 
@@ -12,6 +11,7 @@ from App.apis.api_constant import HTTP_CREATE_OK, USER_ACTION_REGISTER, USER_ACT
 from App.apis.semcal_user.semcal_utils import get_semcal_user
 from App.models.semcal_user import SemCalUser
 from App.ext import cache
+from App.utils import generate_semcal_user_token
 
 parse_base = reqparse.RequestParser()
 parse_base.add_argument("password", type=str, required=True, help="please nenter password")
@@ -77,7 +77,7 @@ class SemCalUsersResource(Resource):
                 abort(401, msg="password error")
             if user.is_delete:
                 abort(401, msg="user not exist")
-            token = uuid.uuid4().hex
+            token = generate_semcal_user_token()
 
             cache.set(token, user.id, timeout=60*60*24*7)
 

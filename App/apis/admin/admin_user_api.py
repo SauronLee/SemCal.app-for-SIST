@@ -13,6 +13,7 @@ from App.apis.api_constant import HTTP_CREATE_OK, USER_ACTION_REGISTER, USER_ACT
 from App.models.admin.admin_user_model import AdminUser
 from App.ext import cache
 from App.settings import ADMINS
+from App.utils import generate_admin_user_token
 
 parse_base = reqparse.RequestParser()
 parse_base.add_argument("password", type=str, required=True, help="please nenter password")
@@ -72,7 +73,7 @@ class AdminUsersResource(Resource):
                 abort(401, msg="password error")
             if user.is_delete:
                 abort(401, msg="user not exist")
-            token = uuid.uuid4().hex
+            token = generate_admin_user_token()
 
             cache.set(token, user.id, timeout=60 * 60 * 24 * 7)
 
