@@ -1,10 +1,11 @@
-from flask import request
-from flask_restful import Resource, reqparse, abort, marshal, fields
+
+from flask_restful import Resource, reqparse, abort, marshal, fields, marshal_with
+from werkzeug.datastructures import FileStorage
 
 from App.apis.admin.utils import login_required
-from App.apis.api_constant import HTTP_CREATE_OK
+from App.apis.api_constant import HTTP_CREATE_OK, HTTP_OK
+from App.apis.common.utils import filename_transfer
 from App.models.common.semcal_model import SemCal
-from App.settings import UPLOADS_DIR
 
 parse = reqparse.RequestParser()
 """
@@ -34,7 +35,7 @@ parse.add_argument("language", required=True, help="must supply language")
 parse.add_argument("accuracy_rate", required=True, help="must supply accuracy_rate")
 parse.add_argument("country", required=True, help="must supply country")
 parse.add_argument("openday", required=True, help="must supply openday")
-#parse.add_argument("backgroundpicture", required=True, help="must supply backgroundpicture")
+parse.add_argument("backgroundpicture", type=FileStorage, required=True, help="must supply backgroundpicture", location=['files'])
 
 semcal_fields = {
         "showname_model_str" : fields.String,
@@ -50,11 +51,26 @@ semcal_fields = {
         "backgroundpicture" : fields.String
 }
 
+multi_semcal_fields = {
+    "status": fields.Integer,
+    "msg": fields.String,
+    "data": fields.List(fields.Nested(semcal_fields))
+}
+
 
 
 class SemCalsResource(Resource):
+    @marshal_with(multi_semcal_fields)
     def get(self):
-        return {"msg": "get ok"}
+
+        multi_semcal = SemCal.query.all()
+
+        data = {
+            "msg": "create success",
+            "status": HTTP_OK,
+            "data": multi_semcal
+        }
+        return data
     @login_required
     def post(self):
 
@@ -69,8 +85,8 @@ class SemCalsResource(Resource):
         accuracy_rate = args.get("accuracy_rate")
         country = args.get("country")
         openday = args.get("openday")
-        #backgroundpicture = args.get("backgroundpicture")
-        backgroundpicture = request.files.get("backgroundpicture")
+        backgroundpicture = args.get("backgroundpicture")
+        #backgroundpicture = request.files.get("backgroundpicture")
 
 
         semcal = SemCal()
@@ -88,10 +104,11 @@ class SemCalsResource(Resource):
         print("type(backgroundpicture)=", type(backgroundpicture))
         print("backgroundpicture=", backgroundpicture)
 
-        filepath = UPLOADS_DIR + backgroundpicture.filename
+        file_info = filename_transfer(backgroundpicture.filename)
+        filepath = file_info[0]
         backgroundpicture.save(filepath)
 
-        semcal.backgroundpicture = filepath
+        semcal.backgroundpicture = file_info[1]
 
 
         if not semcal.save():
@@ -107,7 +124,15 @@ class SemCalsResource(Resource):
 
 class SemCalResource(Resource):
     def get(self, id):
-        return {"msg": "get ok"}
+        semcal = SemCal.query.get(id)
+        if not semcal:
+            abort(404, msg="semcal is not exist")
+        data = {
+            "msg": "ok",
+            "status": HTTP_OK,
+            "data": marshal(semcal, semcal_fields)
+        }
+        return data
     @login_required
     def patch(self, id):
         return {"msg": "post ok"}

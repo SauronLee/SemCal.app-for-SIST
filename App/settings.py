@@ -48,4 +48,6 @@ envs = {
 }
 
 ADMINS = ('Lixiaoran', 'Sauron')
+
+FILE_PATH_PROFIX = '/static/uploads/icons/'
 UPLOADS_DIR = '/home/lixiaoran/SemCal/static/uploads/icons/'
