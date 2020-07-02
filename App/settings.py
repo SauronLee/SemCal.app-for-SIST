@@ -48,3 +48,4 @@ envs = {
 }
 
 ADMINS = ('Lixiaoran', 'Sauron')
+UPLOADS_DIR = '/home/lixiaoran/SemCal/static/uploads/icons/'
