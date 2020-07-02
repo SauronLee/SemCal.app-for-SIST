@@ -1,7 +1,7 @@
 from flask import g
 from flask_restful import Resource, reqparse, abort
 from App.apis.semcal_user.utils import login_required, require_permission
-from App.models.semcal_user.semcal_user_model import VIP_USER
+from App.models.semcal_user.semcal_user_model import VIP_USER, BLACK_USER, COMMON_USER
 
 
 class SemCalOrdersResource(Resource):
@@ -16,6 +16,6 @@ class SemCalOrdersResource(Resource):
 
 class SemCalOrderResource(Resource):
 
-    @require_permission(VIP_USER)
+    @require_permission(COMMON_USER)
     def put(self, order_id):
         return {"msg": "change succes"}

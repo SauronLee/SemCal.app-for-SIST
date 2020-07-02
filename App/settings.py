@@ -46,3 +46,5 @@ envs = {
     "develop": DevelopConfig,
     "defualt": DevelopConfig
 }
+
+ADMINS = ('Lixiaoran', 'Sauron')

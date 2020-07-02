@@ -1,7 +1,7 @@
 from App.models.semcal_user import SemCalUser
 
 
-def get_user(user_ident: object) -> object:
+def get_semcal_user(user_ident: object) -> object:
 
     if not user_ident:
         return None

@@ -2,17 +2,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from App.ext import db
 from App.models import BaseModel
-from App.models.semcal_user.model_constant import PERMISSION_NONE
 
-BLACK_USER = 1
-COMMON_USER = 0
-VIP_USER = 2
+PERMISSION_NONE = 0
+PERMISSION_COMMON = 1
 
-class SemCalUser(BaseModel):
+
+
+class AdminUser(BaseModel):
     username = db.Column(db.String(32), unique=True)
     _password = db.Column(db.String(256))
     is_delete = db.Column(db.Boolean, default=False)
     permission = db.Column(db.Integer, default=PERMISSION_NONE)
+    is_super = db.Column(db.Boolean, default=False)
 
     @property
     def password(self):
@@ -25,8 +26,4 @@ class SemCalUser(BaseModel):
         return check_password_hash(self._password, password_value)
 
     def check_permission(self, permission):
-
-        if BLACK_USER & self.permission == BLACK_USER:
-            return False
-        else:
-            return permission & self.permission == permission
+        return self.is_super or permission & self.permission == permission
